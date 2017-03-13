@@ -15,16 +15,26 @@ void ParticleSystem::InitWithCount(int _pNum, int _w, int _h)
 			Vec2 vel; vel.m_x = rand()%3 - 1;			vel.m_y = rand()%3 - 1;
 			Vec2 acc; acc.m_x = 0;								acc.m_y = 0;
 			Particle* p = new Particle(pos, vel, acc);
+			p->m_sys = this;
 			m_particles.push_back(p);
 		}
 	}
+
+	m_table = new HashTable;
 }
 
 void ParticleSystem::HashParticles()
 {
-	for(unsigned int i = 0; i < m_particles.size(); i++)
+	for(size_t i = 0; i < m_particles.size(); i++)
 	{
-		m_table->Hash(m_particles[i]);
+		Particle* p = m_particles.at(i);
+		if(p != NULL)
+		{
+			if(p->IsInBounds())
+				m_table->Hash(p);
+			else
+				p->Reset();
+		}
 	}
 }
 

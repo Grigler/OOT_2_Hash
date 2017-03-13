@@ -5,7 +5,21 @@ struct Vec2
 {
 	float m_x;
 	float m_y;
-	
+	Vec2()
+	{
+		m_x = 0;
+		m_y = 0;
+	}
+	Vec2(float _x, float _y)
+	{
+		m_x = _x;
+		m_y = _y;
+	}
+	Vec2(int _x, int _y)
+	{
+		m_x = _x;
+		m_y = _y;
+	}
 	//Operator overload for ease of use
 	Vec2 operator*(float _f)
 	{

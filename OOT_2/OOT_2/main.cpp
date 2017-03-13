@@ -4,6 +4,7 @@
 
 //#include "Particle.h"
 #include "ParticleSystem.h"
+#include "HashTable.h"
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -32,7 +33,9 @@ int main()
 	while(isRunning)
 	{
 		//Hash particle positions
-		
+		//p.m_table->ClearMap();
+		p.HashParticles();
+
 		//Check collision - Updating Particle Positions + velocity
 		p.Update(dT);
 
