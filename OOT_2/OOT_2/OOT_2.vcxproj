@@ -40,12 +40,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ExecutablePath>$(NativeExecutablePath);</ExecutablePath>
-    <IncludePath>C:\SDKs\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\SDKs\glm-0.9.7.1\glm\glm;C:\SDKs\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\SDKs\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ExecutablePath>$(NativeExecutablePath);</ExecutablePath>
-    <IncludePath>C:\SDKs\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\SDKs\glm-0.9.7.1\glm\glm;C:\SDKs\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\SDKs\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

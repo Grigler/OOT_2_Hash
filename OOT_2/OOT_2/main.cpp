@@ -1,10 +1,12 @@
 #include <SDL.h>
+#include <glm.hpp>
+
 
 #include <iostream>
 
 //#include "Particle.h"
-#include "ParticleSystem.h"
-#include "HashTable.h"
+//#include "ParticleSystem.h"
+//#include "HashTable.h"
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -27,21 +29,21 @@ int main()
 	bool isRunning = true;
 	int dT = 0, prevTStamp = SDL_GetTicks();
 	
-	ParticleSystem p;
-	p.InitWithCount(10000, WIDTH, HEIGHT);
+	//ParticleSystem p;
+	//p.InitWithCount(10000, WIDTH, HEIGHT);
 
 	while(isRunning)
 	{
 		//Hash particle positions
 		//p.m_table->ClearMap();
-		p.HashParticles();
+		//p.HashParticles();
 
 		//Check collision - Updating Particle Positions + velocity
-		p.Update(dT);
+		//p.Update(dT);
 
 		//Draw Particles
-		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		p.Draw(renderer);
+		//SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		//p.Draw(renderer);
 
 		//SwapWindow
 		SDL_RenderPresent(renderer);
