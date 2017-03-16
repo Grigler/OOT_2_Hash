@@ -2,13 +2,12 @@
 #include <glm.hpp>
 
 #include "SQLite3 Wrap\SQLite3Wrap.h"
+#include "HashTableSystem.h"
 
 #include <iostream>
+#include <time.h>
 
-#define WIDTH 1280
-#define HEIGHT 720
-
-#define DATA_PUSH_TIME 64
+#define DATA_PUSH_TIME 1500
 
 #undef main
 
@@ -25,10 +24,10 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
 struct FpsDataPacket
 {
-	int m_timeStamp;
+	float m_timeStamp;
 	float m_fps;
 
-	FpsDataPacket(int _t, float _fps)
+	FpsDataPacket(float _t, float _fps)
 	{
 		m_timeStamp = _t;
 		m_fps = _fps;
@@ -43,71 +42,87 @@ struct FpsDataPacket
 
 int main()
 {
+	srand(time(NULL));
+
 	//Initialisation
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		std::cerr << "Fail" << std::endl;
 		return -1;
 	}
-	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 2", 250, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 2", 250, 100, S_WIDTH, S_HEIGHT, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 	SDL_RenderClear(renderer);
 
-	
 
-	SQLite3::DB db("Test.db3");
-	db.RunSQL("PRAGMA synchronous=OFF;");
+	SQLite3::DB db(":memory:");
+	//db.RunSQL("PRAGMA synchronous=OFF;");
 	//Ensuring single instance of data
 	db.RunSQL("DROP TABLE FPS_DATA;");
 	db.ToggleSuccesPrint();
 
-	char* fields[] = {"TIME_STAMP INT NOT NULL", "FPS FLOAT NOT NULL"};//Making creating a table easier
+	char* fields[] = {"TIME_STAMP FLOAT NOT NULL", "FPS FLOAT NOT NULL"};//Making creating a table easier
 	db.CreateTable("FPS_DATA", fields, 2);
 	//delete [] fields;//Cleaning fields
 
 	bool isRunning = true;
-	int dT = 0, prevTStamp = SDL_GetTicks();
-	int startTime = prevTStamp, lastDataPush = prevTStamp;
+	float dT = 0.0f, prevTStamp = SDL_GetTicks();
+	float startTime = prevTStamp, lastDataPush = prevTStamp;
+	long unsigned int fc = 0;
+
+	std::vector<FpsDataPacket> dataSet;
+
+	ParticleSystem p;
+	p.InitWith(10000);
 
 	while(isRunning)
 	{
 		//SwapWindow
 		SDL_RenderPresent(renderer);
 
-		for (int i = 0; i < rand()%10; i++)
-		{
-			for (int j = 0; j < rand()%10; j++)
-			{
-				int a;
-			}
-		}
-
 		//Clear
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 		SDL_RenderClear(renderer);
 
 		//Time stuff
-		dT = SDL_GetTicks() - prevTStamp;
+		dT = (float)((SDL_GetTicks()- prevTStamp) / 1000.0f);
 		prevTStamp = SDL_GetTicks();
 
-		std::cout << 1000.0f/dT << std::endl;
-		int t = prevTStamp;
+		//Program happens here
+
+		p.Update(dT);
+
+		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); 
+		p.Draw(renderer);
+
+		//std::cout << prevTStamp << ": " << dT << " " << 1.0f/dT;
+		float t = prevTStamp;
 		if(t - lastDataPush >= DATA_PUSH_TIME)
 		{
-			SQLite3::Input::InsertToTable(&db, db.m_tables.at(0), FpsDataPacket(t - startTime, (1000.0f/dT)));
+			//std::cout << " PUSH: " << dataSet.size();
+			SQLite3::Input::InsertVecToTable(&db, db.m_tables.at(0), dataSet);
+			dataSet.clear();
+			
 			lastDataPush = t;
 		}
 
-		if(SDL_GetTicks() >= 15*1000)
+		dataSet.push_back(FpsDataPacket(t - startTime, 1.0f/dT));
+
+		//std::cout << std::endl;
+		//Recording time for data
+		if(SDL_GetTicks() >= 120*1000)
 		{
 			isRunning = false;
 		}
+
+		fc++;
 	}
 
-	db.RunSQL("SELECT * FROM FPS_DATA", callback);
+	//db.RunSQL("SELECT * FROM FPS_DATA", callback);
+	db.InMemoryToFile("FromMemory.db3");
 
-	getchar();
+	//getchar();
 
 	//Cleanup
 	SDL_DestroyRenderer(renderer);

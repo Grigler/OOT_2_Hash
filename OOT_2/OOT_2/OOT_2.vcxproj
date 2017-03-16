@@ -75,12 +75,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HashTable.cpp" />
+    <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="SQLite3 Wrap\DB.cpp" />
     <ClCompile Include="SQLite3 Wrap\ErrLog.cpp" />
     <ClCompile Include="SQLite3 Wrap\sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataHandler.h" />
+    <ClInclude Include="HashTable.h" />
+    <ClInclude Include="HashTableSystem.h" />
+    <ClInclude Include="List.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="SQLite3 Wrap\Data.h" />
     <ClInclude Include="SQLite3 Wrap\DB.h" />
     <ClInclude Include="SQLite3 Wrap\ErrLog.h" />

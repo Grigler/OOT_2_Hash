@@ -61,7 +61,7 @@ namespace SQLite3
 
 		//Toggling Succes Print
 		void ToggleSuccesPrint() {m_isPrintingSuccess = !m_isPrintingSuccess;}
-
+		void InMemoryToFile(char* _fileName);
 	private:
 		sqlite3* m_db;
 		bool m_isPrintingSuccess;

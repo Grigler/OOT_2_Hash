@@ -167,3 +167,18 @@ void SQLite3::DB::RunSQL(char* _sql, int (*_callback)(void*,int,char**,char**))
 		ErrLog::Print("No Database Open");
 	}
 }
+
+void SQLite3::DB::InMemoryToFile(char* _fileName)
+{
+	sqlite3* fDB;
+	sqlite3_open(_fileName, &fDB);
+
+	sqlite3_backup* backupOBJ = sqlite3_backup_init(fDB, "main", m_db, "main");
+	if(backupOBJ)
+	{
+		(void)sqlite3_backup_step(backupOBJ, -1);
+		(void)sqlite3_backup_finish(backupOBJ);
+	}
+	else
+		ErrLog::Print("Failed To Write To File");
+}

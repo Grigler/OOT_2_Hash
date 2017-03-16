@@ -4,6 +4,7 @@
 //stdlib icnludes
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include "SQLite3 Wrap\DB.h"
 
@@ -82,6 +83,23 @@ namespace SQLite3
 			std::cout << "Debug: " << s.str().c_str() << std::endl;
 			#endif
 
+			_db->RunSQL(s.str().c_str());
+		}
+
+		template<class dataT>
+		void InsertVecToTable(DB* _db, Table* _table, std::vector<dataT>& _inp)
+		{
+			std::stringstream s;
+			for (unsigned int i = 0; i < _inp.size(); i++)
+			{
+				s << "INSERT INTO " << _table->m_name << "(";
+				_table->PrintFieldsToSStream(s);
+				s << ") VALUES(" << _inp.at(i) << ");";
+			}
+
+			#ifdef SQLITE3_DEBUG_PRINT
+			std::cout << "Debug: " << s.str().c_str() << std::endl;
+			#endif
 			_db->RunSQL(s.str().c_str());
 		}
 	}
