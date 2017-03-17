@@ -1,5 +1,8 @@
 #include "HashTable.h"
 
+//REMOVE AFTER DEBUGGING
+#include <iostream>
+
 #include "List.h"
 #include "Particle.h"
 
@@ -9,7 +12,13 @@
 HashTable::HashTable()
 {
 	//Filling m_table with NULL pointers
-	memset(m_table, NULL, sizeof(m_table));
+	for (int x = 0; x < BUCKET_W; x++)
+	{
+		for (int y = 0; y < BUCKET_H; y++)
+		{
+			m_table[x][y] = new List();
+		}
+	}
 }
 
 HashTable::~HashTable()
@@ -26,18 +35,31 @@ HashTable::~HashTable()
 
 void HashTable::AssignHashKey(Particle* _p)
 {
+	//Hash values for x and y
 	int hX = 0, hY = 0;
 
-	//hash function
-	
-	//TODO - Write the function
+	//Simply hashing position to bucket
+	//hX = floor(_p->m_pos.x / S_WIDTH * SQUARE_BUCKET_NUM);
+	//hY = floor(_p->m_pos.y / S_HEIGHT * SQUARE_BUCKET_NUM);
+	hX = floor(_p->m_pos.x / (float)(S_WIDTH / SQUARE_BUCKET_NUM));
+	hY = floor((_p->m_pos.y / (float)(S_HEIGHT / SQUARE_BUCKET_NUM)));
 
-	//Assigning key to particle
-	_p->m_key = glm::vec2(hX,hY);
+	//DEBUG
+	//std::cout << _p->m_pos.x << ":" << _p->m_pos.x / S_WIDTH * SQUARE_BUCKET_NUM << ", " << _p->m_pos.y << ":" << _p->m_pos.y / S_HEIGHT * SQUARE_BUCKET_NUM << std::endl;
+
+	if(hX >= 0 && hX < BUCKET_W && hY >= 0 && hY < BUCKET_H)
+	{
+		//Assigning key to particle
+		_p->m_key = glm::vec2(hX,hY);
 	
-	//Checking if the list has been created yet (may be better to pre-process creation)
-	if(m_table[hX][hY] == NULL)
-		m_table[hX][hY] = new List();
+		//Checking if the list has been created yet (may be better to pre-process creation)
+		if(m_table[hX][hY] == NULL)
+			m_table[hX][hY] = new List();
+
+		//Adding particle to first position in Bucket
+		m_table[hX][hY]->Add(_p, m_table[hX][hY]->m_root);
+	}
+	
 }
 void HashTable::ClearTable()
 {

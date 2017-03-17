@@ -24,18 +24,20 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
 struct FpsDataPacket
 {
+	int   m_pCount;
 	float m_timeStamp;
 	float m_fps;
 
-	FpsDataPacket(float _t, float _fps)
+	FpsDataPacket(int _pC, float _t, float _fps)
 	{
+		m_pCount = _pC;
 		m_timeStamp = _t;
 		m_fps = _fps;
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const FpsDataPacket& packet)
 	{
-		os << packet.m_timeStamp << "," << packet.m_fps;
+		os << packet.m_pCount << "," << packet.m_timeStamp << "," << packet.m_fps;
 		return os;
 	}
 };
@@ -51,6 +53,7 @@ int main()
 		return -1;
 	}
 	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 2", 250, 100, S_WIDTH, S_HEIGHT, SDL_WINDOW_SHOWN);
+
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 	SDL_RenderClear(renderer);
@@ -58,12 +61,17 @@ int main()
 
 	SQLite3::DB db(":memory:");
 	//db.RunSQL("PRAGMA synchronous=OFF;");
-	//Ensuring single instance of data
-	db.RunSQL("DROP TABLE FPS_DATA;");
 	db.ToggleSuccesPrint();
 
-	char* fields[] = {"TIME_STAMP FLOAT NOT NULL", "FPS FLOAT NOT NULL"};//Making creating a table easier
-	db.CreateTable("FPS_DATA", fields, 2);
+	char* fields[] = {"P_COUNT INT NOT NULL", "TIME_STAMP FLOAT NOT NULL", "FPS FLOAT NOT NULL"};//Making creating a table easier
+	try
+	{
+		db.CreateTable("FPS_DATA", fields, 3);
+	}
+	catch(std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	//delete [] fields;//Cleaning fields
 
 	bool isRunning = true;
@@ -74,10 +82,26 @@ int main()
 	std::vector<FpsDataPacket> dataSet;
 
 	ParticleSystem p;
-	p.InitWith(10000);
+	int pCount = 5000;
+
+	std::cout << "> Starting Sim. With " << pCount << " Particles\n";
+	
+	p.InitWith(pCount);
+
+	SDL_Event e;
 
 	while(isRunning)
 	{
+
+		while(SDL_PollEvent(&e) != 0)
+		{
+			//Occurs when window's [X] is clicked
+			if(e.type == SDL_QUIT) 
+			{
+				isRunning = false;
+			}
+		}  
+
 		//SwapWindow
 		SDL_RenderPresent(renderer);
 
@@ -90,39 +114,52 @@ int main()
 		prevTStamp = SDL_GetTicks();
 
 		//Program happens here
-
 		p.Update(dT);
 
 		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); 
 		p.Draw(renderer);
 
-		//std::cout << prevTStamp << ": " << dT << " " << 1.0f/dT;
 		float t = prevTStamp;
 		if(t - lastDataPush >= DATA_PUSH_TIME)
 		{
-			//std::cout << " PUSH: " << dataSet.size();
 			SQLite3::Input::InsertVecToTable(&db, db.m_tables.at(0), dataSet);
 			dataSet.clear();
-			
+
 			lastDataPush = t;
 		}
+		if(1.0f/dT <= 1000) //Fixing some 1.#INF issue with v. high framerates
+			dataSet.push_back(FpsDataPacket(pCount, t - startTime, 1.0f/dT));
 
-		dataSet.push_back(FpsDataPacket(t - startTime, 1.0f/dT));
-
-		//std::cout << std::endl;
 		//Recording time for data
-		if(SDL_GetTicks() >= 120*1000)
+		if(SDL_GetTicks() - startTime >= 12*1000)
 		{
-			isRunning = false;
+			startTime = SDL_GetTicks();
+
+			//Pushing all left-over data before going into next amount
+			SQLite3::Input::InsertVecToTable(&db, db.m_tables.at(0), dataSet);
+			dataSet.clear();
+
+			pCount += 5000;
+			if(pCount >= 50000)
+				isRunning = false;
+			else
+			{
+				p.InitWith(pCount);
+
+				std::cout << "> Starting Sim. With " << pCount << " Particles\n";
+
+				dT = 0;
+				startTime = SDL_GetTicks();
+				lastDataPush = startTime;
+			}
 		}
 
 		fc++;
 	}
 
-	//db.RunSQL("SELECT * FROM FPS_DATA", callback);
-	db.InMemoryToFile("FromMemory.db3");
+	std::cout << "> Dumping Data to 'ProfileData.db3'\n";
 
-	//getchar();
+	db.InMemoryToFile("ProfileData.db3");
 
 	//Cleanup
 	SDL_DestroyRenderer(renderer);

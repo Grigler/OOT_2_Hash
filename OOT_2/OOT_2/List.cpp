@@ -2,6 +2,9 @@
 
 #include "Particle.h"
 
+//REMOVE AFTER DEBUGGING
+#include <iostream>
+
 List::List()
 {
 	m_root = new Item(NULL, NULL);
@@ -54,15 +57,20 @@ void List::Clear(Item* _c)
 {
 	if(_c != NULL)
 	{
+		Item* next = _c->m_next;
+
 		if(_c->m_data != NULL) //Presuming root's data is always NULL
 		{
-			Item* next = _c->m_next;
 			delete _c;
-			Clear(next);
+			_c = NULL;			
 		}
+		else
+			_c->m_next = NULL;
+
+		Clear(next);
 	}
 }
-unsigned int GetLength(Item* _c)
+unsigned int List::GetLength(Item* _c)
 {
 	if(_c->m_next != NULL)
 		return GetLength(_c->m_next) + 1;

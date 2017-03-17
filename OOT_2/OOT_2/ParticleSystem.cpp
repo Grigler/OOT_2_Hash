@@ -2,7 +2,12 @@
 
 #include <SDL.h>
 
+//REMOVE AFTER DEBUGGING
+#include <iostream>
+
+
 #include "Particle.h"
+#include "List.h"
 #include "HashTable.h"
 
 ParticleSystem::ParticleSystem()
@@ -12,10 +17,7 @@ ParticleSystem::ParticleSystem()
 
 void ParticleSystem::InitWith(unsigned int _n)
 {
-	if(m_table)
-		m_table->ClearTable();
-	else
-		m_table = new HashTable();
+	Clear();
 
 	for (unsigned int i = 0; i < _n; i++)
 	{
@@ -43,8 +45,8 @@ Particle* ParticleSystem::CreateParticle()
 {
 	//initialise physicial properties
 	glm::vec2 p = glm::vec2(rand()%S_WIDTH, rand()%S_HEIGHT);
-	glm::vec2 v = glm::normalize(glm::vec2(rand()%1000, rand()%1000));;
-	float r = 0.5f; //TODO - CHANGE TO A CONFIGURABLE VALUE
+	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 2.0f;
+	float r = 1.0f; //TODO - CHANGE TO A CONFIGURABLE VALUE
 
 	return new Particle(p, v, r, m_table);
 }
@@ -61,6 +63,22 @@ void ParticleSystem::Update(float _deltaT)
 	if(m_table)
 		m_table->ClearTable();
 
+	//Assigning hashes to all particles
+	for (unsigned int i = 0; i < m_particles.size(); i++)
+	{
+		m_table->AssignHashKey(m_particles.at(i));
+	}
+/*
+	for (int x = 0; x < BUCKET_W; x++)
+	{
+		for (int y = 0; y < BUCKET_H; y++)
+		{
+			std::cout << x << "," << y << "\t" << m_table->m_table[x][y]->GetLength(m_table->m_table[x][y]->m_root) << std::endl;
+			getchar();
+		}
+	}
+	*/
+	//Updating all particles (includes handling collisions)
 	for (unsigned int i = 0; i < m_particles.size(); i++)
 	{
 		m_particles.at(i)->Update(_deltaT);

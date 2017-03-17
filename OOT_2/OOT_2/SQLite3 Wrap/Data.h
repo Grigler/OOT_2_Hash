@@ -1,7 +1,7 @@
 #ifndef __DATA__
 #define __DATA__
 
-//stdlib icnludes
+//stdlib includes
 #include <iostream>
 #include <sstream>
 #include <vector>

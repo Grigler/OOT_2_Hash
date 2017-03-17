@@ -1,24 +1,20 @@
-﻿Build started 16/03/2017 15:52:14.
+﻿Build started 17/03/2017 14:27:37.
      1>Project "H:\OOT_2\OOT_2\OOT_2\OOT_2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ISDL2.lib /ISDL2main.lib /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt HashTable.cpp List.cpp main.cpp Particle.cpp ParticleSystem.cpp "SQLite3 Wrap\DB.cpp"
-         DB.cpp
-     1>h:\oot_2\oot_2\oot_2\sqlite3 wrap\db.cpp(74): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115) : see declaration of 'strcat'
-     1>h:\oot_2\oot_2\oot_2\sqlite3 wrap\db.cpp(81): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110) : see declaration of 'strcpy'
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ISDL2.lib /ISDL2main.lib /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt HashTable.cpp Particle.cpp ParticleSystem.cpp main.cpp
+         main.cpp
+     1>h:\oot_2\oot_2\oot_2\main.cpp(47): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>h:\oot_2\oot_2\oot_2\main.cpp(77): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
+     1>h:\oot_2\oot_2\oot_2\main.cpp(98): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
+     1>h:\oot_2\oot_2\oot_2\main.cpp(120): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
+     1>h:\oot_2\oot_2\oot_2\main.cpp(133): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
          ParticleSystem.cpp
          Particle.cpp
-     1>h:\oot_2\oot_2\oot_2\particle.cpp(19): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\particle.cpp(29): warning C4244: 'initializing' : conversion from 'float' to 'const int', possible loss of data
-         main.cpp
-     1>h:\oot_2\oot_2\oot_2\main.cpp(45): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\main.cpp(70): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\main.cpp(90): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
-         List.cpp
-         HashTable.cpp
+     1>h:\oot_2\oot_2\oot_2\particle.cpp(22): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>h:\oot_2\oot_2\oot_2\particle.cpp(35): warning C4244: 'initializing' : conversion from 'float' to 'const int', possible loss of data
          Generating Code...
-     1>h:\oot_2\oot_2\oot_2\particle.cpp(32): warning C4700: uninitialized local variable 'i' used
+         Skipping... (no relevant changes detected)
+         HashTable.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"H:\OOT_2\OOT_2\Debug\OOT_2.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"H:\OOT_2\OOT_2\Debug\OOT_2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\OOT_2\OOT_2\Debug\OOT_2.lib" /MACHINE:X86 Debug\HashTable.obj
          Debug\List.obj
@@ -33,4 +29,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:19.88
+Time Elapsed 00:00:18.77
