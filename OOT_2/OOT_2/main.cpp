@@ -7,7 +7,7 @@
 #include <iostream>
 #include <time.h>
 
-#define DATA_PUSH_TIME 1500
+#define DATA_PUSH_TIME 1000
 
 #undef main
 
@@ -20,6 +20,11 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
    }
    printf("\n");
    return 0;
+}
+
+static int AverageFPSCallback(void* _na, int argc, char** argv, char** azColName)
+{
+	//Take all FPS collumn data and add it together and average then print at end (use atof to convert to float)
 }
 
 struct FpsDataPacket
@@ -49,7 +54,7 @@ int main()
 	//Initialisation
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		std::cerr << "Fail" << std::endl;
+		std::cerr << "SDL Init Failure" << std::endl;
 		return -1;
 	}
 	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 2", 250, 100, S_WIDTH, S_HEIGHT, SDL_WINDOW_SHOWN);
@@ -57,7 +62,6 @@ int main()
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 	SDL_RenderClear(renderer);
-
 
 	SQLite3::DB db(":memory:");
 	//db.RunSQL("PRAGMA synchronous=OFF;");
@@ -72,7 +76,6 @@ int main()
 	{
 		std::cout << e.what() << std::endl;
 	}
-	//delete [] fields;//Cleaning fields
 
 	bool isRunning = true;
 	float dT = 0.0f, prevTStamp = SDL_GetTicks();
@@ -82,7 +85,7 @@ int main()
 	std::vector<FpsDataPacket> dataSet;
 
 	ParticleSystem p;
-	int pCount = 5000;
+	int pCount = 2000;
 
 	std::cout << "> Starting Sim. With " << pCount << " Particles\n";
 	
@@ -131,7 +134,7 @@ int main()
 			dataSet.push_back(FpsDataPacket(pCount, t - startTime, 1.0f/dT));
 
 		//Recording time for data
-		if(SDL_GetTicks() - startTime >= 12*1000)
+		if(SDL_GetTicks() - startTime >= 15*1000)
 		{
 			startTime = SDL_GetTicks();
 
@@ -139,13 +142,14 @@ int main()
 			SQLite3::Input::InsertVecToTable(&db, db.m_tables.at(0), dataSet);
 			dataSet.clear();
 
-			pCount += 5000;
-			if(pCount >= 50000)
+			pCount += 2000;
+			if(pCount >= 30000)
 				isRunning = false;
 			else
 			{
-				p.InitWith(pCount);
 
+
+				p.InitWith(pCount);
 				std::cout << "> Starting Sim. With " << pCount << " Particles\n";
 
 				dT = 0;

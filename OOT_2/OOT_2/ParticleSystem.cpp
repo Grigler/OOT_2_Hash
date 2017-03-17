@@ -2,10 +2,6 @@
 
 #include <SDL.h>
 
-//REMOVE AFTER DEBUGGING
-#include <iostream>
-
-
 #include "Particle.h"
 #include "List.h"
 #include "HashTable.h"
@@ -45,7 +41,7 @@ Particle* ParticleSystem::CreateParticle()
 {
 	//initialise physicial properties
 	glm::vec2 p = glm::vec2(rand()%S_WIDTH, rand()%S_HEIGHT);
-	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 2.0f;
+	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 5.0f;
 	float r = 1.0f; //TODO - CHANGE TO A CONFIGURABLE VALUE
 
 	return new Particle(p, v, r, m_table);
@@ -68,19 +64,15 @@ void ParticleSystem::Update(float _deltaT)
 	{
 		m_table->AssignHashKey(m_particles.at(i));
 	}
-/*
-	for (int x = 0; x < BUCKET_W; x++)
-	{
-		for (int y = 0; y < BUCKET_H; y++)
-		{
-			std::cout << x << "," << y << "\t" << m_table->m_table[x][y]->GetLength(m_table->m_table[x][y]->m_root) << std::endl;
-			getchar();
-		}
-	}
-	*/
+
 	//Updating all particles (includes handling collisions)
-	for (unsigned int i = 0; i < m_particles.size(); i++)
+	//Pragma omp is used to do this is in parallel as there is no danger of collision
+	#pragma omp parallel
 	{
-		m_particles.at(i)->Update(_deltaT);
+		#pragma omp for
+		for (unsigned int i = 0; i < m_particles.size(); i++)
+		{
+			m_particles.at(i)->Update(_deltaT);
+		}
 	}
 }

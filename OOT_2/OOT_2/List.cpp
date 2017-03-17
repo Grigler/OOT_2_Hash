@@ -2,9 +2,6 @@
 
 #include "Particle.h"
 
-//REMOVE AFTER DEBUGGING
-#include <iostream>
-
 List::List()
 {
 	m_root = new Item(NULL, NULL);

@@ -1,8 +1,5 @@
 #include "Particle.h"
 
-//Used for debugging remember to remove
-#include <iostream>
-
 #include "List.h"
 #include "HashTable.h"
 
@@ -26,17 +23,25 @@ void Particle::Update(float _deltaT)
 {
 	//Attempted Forward-Euler and 1st langrangian, F.E. seemed more stable
 	m_pos += m_vel*_deltaT;
-	HandleCollisions();
-	
+	if(m_pos.x >=0 && m_pos.x <= S_WIDTH && m_pos.y >= 0 && m_pos.y <= S_HEIGHT)
+	{
+		HandleCollisions();
+	}
+	else
+	{
+		//Super basic reflection of velocity with bounds 'hit'
+		//simulating a non elastic collision 
+		m_vel = -m_vel*0.5f;		
+	}
+	//Arbritary dampening
+	m_vel += -m_vel*_deltaT*_deltaT;
 }
-
+//Not collisions are treated as perfect elastic collisions
 void Particle::HandleCollisions()
 {
 	const int kX = m_key.x, kY = m_key.y;
 	List* bucket = m_table->m_table[kX][kY];
 	Item* i = bucket->m_root;
-
-	//std::cout << "(" << kX << ", " << kY << ") : " << bucket->GetLength(bucket->m_root) << std::endl;
 
 	while(i != NULL)
 	{

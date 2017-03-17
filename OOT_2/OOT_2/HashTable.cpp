@@ -1,8 +1,5 @@
 #include "HashTable.h"
 
-//REMOVE AFTER DEBUGGING
-#include <iostream>
-
 #include "List.h"
 #include "Particle.h"
 
@@ -39,13 +36,8 @@ void HashTable::AssignHashKey(Particle* _p)
 	int hX = 0, hY = 0;
 
 	//Simply hashing position to bucket
-	//hX = floor(_p->m_pos.x / S_WIDTH * SQUARE_BUCKET_NUM);
-	//hY = floor(_p->m_pos.y / S_HEIGHT * SQUARE_BUCKET_NUM);
 	hX = floor(_p->m_pos.x / (float)(S_WIDTH / SQUARE_BUCKET_NUM));
 	hY = floor((_p->m_pos.y / (float)(S_HEIGHT / SQUARE_BUCKET_NUM)));
-
-	//DEBUG
-	//std::cout << _p->m_pos.x << ":" << _p->m_pos.x / S_WIDTH * SQUARE_BUCKET_NUM << ", " << _p->m_pos.y << ":" << _p->m_pos.y / S_HEIGHT * SQUARE_BUCKET_NUM << std::endl;
 
 	if(hX >= 0 && hX < BUCKET_W && hY >= 0 && hY < BUCKET_H)
 	{
