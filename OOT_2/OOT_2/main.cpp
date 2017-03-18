@@ -22,9 +22,25 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
    return 0;
 }
 
+float g_fpsTotal = 0.0f;
+int g_sampleCount = 0;
+void ResetFPSAverageVals()
+{
+	g_fpsTotal = 0.0f;
+	g_sampleCount = 0;
+}
 static int AverageFPSCallback(void* _na, int argc, char** argv, char** azColName)
 {
 	//Take all FPS collumn data and add it together and average then print at end (use atof to convert to float)
+	for(int i = 0; i < argc; i++)
+	{
+		if(strcmp(azColName[i], "FPS") == 0) //strcmp returns 0 for equal Cstrings
+		{
+			g_fpsTotal += atof(argv[i]);
+			g_sampleCount++;
+		}
+	}
+	return 0;
 }
 
 struct FpsDataPacket
@@ -87,7 +103,7 @@ int main()
 	ParticleSystem p;
 	int pCount = 2000;
 
-	std::cout << "> Starting Sim. With " << pCount << " Particles\n";
+	std::cout << "\n> Starting Sim. With " << pCount << " Particles\n";
 	
 	p.InitWith(pCount);
 
@@ -134,7 +150,7 @@ int main()
 			dataSet.push_back(FpsDataPacket(pCount, t - startTime, 1.0f/dT));
 
 		//Recording time for data
-		if(SDL_GetTicks() - startTime >= 15*1000)
+		if(SDL_GetTicks() - startTime >= 5*1000)
 		{
 			startTime = SDL_GetTicks();
 
@@ -147,11 +163,20 @@ int main()
 				isRunning = false;
 			else
 			{
-
+				//TODO - Replace this with a more OOP approach
+				//Building SQL query to get all the last samples
+				std::stringstream msg;
+				msg << "SELECT * FROM FPS_DATA WHERE P_COUNT = " << pCount - 2000 << ";";
+				//Running with callback function to interpret Cstring to float vals and calculate an average
+				db.RunSQL((char*)msg.str().c_str(), AverageFPSCallback); 
+				std::cout << "> Average FPS For P: " << pCount - 2000 << " - " << g_fpsTotal / g_sampleCount << "fps\n";
+				//Reseting the global vals needed for this
+				ResetFPSAverageVals();
 
 				p.InitWith(pCount);
-				std::cout << "> Starting Sim. With " << pCount << " Particles\n";
+				std::cout << "\n> Starting Sim. With " << pCount << " Particles\n";
 
+				//Reseting timers to account for data processing time
 				dT = 0;
 				startTime = SDL_GetTicks();
 				lastDataPush = startTime;
@@ -160,9 +185,8 @@ int main()
 
 		fc++;
 	}
-
+	//Dumping data from memory to file
 	std::cout << "> Dumping Data to 'ProfileData.db3'\n";
-
 	db.InMemoryToFile("ProfileData.db3");
 
 	//Cleanup

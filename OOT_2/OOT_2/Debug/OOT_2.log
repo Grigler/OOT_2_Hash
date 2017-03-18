@@ -1,22 +1,16 @@
-﻿Build started 17/03/2017 14:27:37.
-     1>Project "H:\OOT_2\OOT_2\OOT_2\OOT_2.vcxproj" on node 2 (Build target(s)).
+﻿Build started 18/03/2017 11:19:48.
+     1>Project "E:\OOT_2_Hash\OOT_2\OOT_2\OOT_2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ISDL2.lib /ISDL2main.lib /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt HashTable.cpp Particle.cpp ParticleSystem.cpp main.cpp
+         E:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ISDL2.lib /ISDL2main.lib /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>h:\oot_2\oot_2\oot_2\main.cpp(47): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\main.cpp(77): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\main.cpp(98): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\main.cpp(120): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\main.cpp(133): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
-         ParticleSystem.cpp
-         Particle.cpp
-     1>h:\oot_2\oot_2\oot_2\particle.cpp(22): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>h:\oot_2\oot_2\oot_2\particle.cpp(35): warning C4244: 'initializing' : conversion from 'float' to 'const int', possible loss of data
-         Generating Code...
-         Skipping... (no relevant changes detected)
-         HashTable.cpp
+     1>e:\oot_2_hash\oot_2\oot_2\main.cpp(38): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>e:\oot_2_hash\oot_2\oot_2\main.cpp(67): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>e:\oot_2_hash\oot_2\oot_2\main.cpp(96): warning C4244: 'initializing' : conversion from 'Uint32' to 'float', possible loss of data
+     1>e:\oot_2_hash\oot_2\oot_2\main.cpp(132): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
+     1>e:\oot_2_hash\oot_2\oot_2\main.cpp(154): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
+     1>e:\oot_2_hash\oot_2\oot_2\main.cpp(180): warning C4244: '=' : conversion from 'Uint32' to 'float', possible loss of data
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"H:\OOT_2\OOT_2\Debug\OOT_2.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"H:\OOT_2\OOT_2\Debug\OOT_2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\OOT_2\OOT_2\Debug\OOT_2.lib" /MACHINE:X86 Debug\HashTable.obj
+         E:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\OOT_2_Hash\OOT_2\Debug\OOT_2.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\OOT_2_Hash\OOT_2\Debug\OOT_2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\OOT_2_Hash\OOT_2\Debug\OOT_2.lib" /MACHINE:X86 Debug\HashTable.obj
          Debug\List.obj
          Debug\main.obj
          Debug\Particle.obj
@@ -24,9 +18,9 @@
          Debug\DB.obj
          Debug\ErrLog.obj
          Debug\sqlite3.obj
-         OOT_2.vcxproj -> H:\OOT_2\OOT_2\Debug\OOT_2.exe
-     1>Done Building Project "H:\OOT_2\OOT_2\OOT_2\OOT_2.vcxproj" (Build target(s)).
+         OOT_2.vcxproj -> E:\OOT_2_Hash\OOT_2\Debug\OOT_2.exe
+     1>Done Building Project "E:\OOT_2_Hash\OOT_2\OOT_2\OOT_2.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:18.77
+Time Elapsed 00:00:01.22
