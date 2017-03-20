@@ -41,7 +41,7 @@ Particle* ParticleSystem::CreateParticle()
 {
 	//initialise physicial properties
 	glm::vec2 p = glm::vec2(rand()%S_WIDTH, rand()%S_HEIGHT);
-	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 5.0f;
+	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 15.0f;
 	float r = 1.0f; //TODO - CHANGE TO A CONFIGURABLE VALUE
 
 	return new Particle(p, v, r, m_table);

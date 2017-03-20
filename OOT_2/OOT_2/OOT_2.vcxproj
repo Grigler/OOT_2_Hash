@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DataHandler.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
