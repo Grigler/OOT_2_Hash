@@ -25,6 +25,8 @@ public:
 
 	//Retuning first Item instance with _p as data - _c is entry point
 	Item* Find(Particle* _p, Item* _c);
+	//Returning Item with 'index' in list (ignoring root) of _indx - returns 0 if not found
+	Item* Find(unsigned int _gIndx, Item* _c, int _cIndx);
 	//Adds new item to list with _p as data and argument as parent
 	void Add(Particle* _p, Item* _parent);
 	//Removes _c with _l being the parent of _c, for re-allocation of m_next

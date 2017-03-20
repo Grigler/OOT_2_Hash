@@ -17,9 +17,6 @@ DataHandler::DataHandler()
 
 	m_db->CreateTable("AVG_FPS_DATA", avgFields, 2);
 	m_avgFpsTable = m_db->m_tables[1]; //Assigning reference to new table
-
-	//s_fpsTotal = 0.0f;
-	//s_sampleCount = 0;
 }
 DataHandler::~DataHandler()
 {
@@ -39,6 +36,9 @@ void DataHandler::SampleAverageFPS(int _pCount)
 	//Running selection with callback function to process data
 	m_db->RunSQL((char*)querry.str().c_str(),AverageFPSCallback);
 	
+	//Print for user
+	std::cout << "\t> Average FPS: " << s_fpsTotal/s_sampleCount << "fps\n";
+
 	//Using that processed data to calculate a quick average and insert it into table
 	SQLite3::Input::InsertToTable(m_db, m_avgFpsTable, AverageFPSDataPacket(_pCount, s_fpsTotal/s_sampleCount));
 	

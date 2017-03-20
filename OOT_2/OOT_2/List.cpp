@@ -14,15 +14,27 @@ List::~List()
 	delete m_root;
 }
 
-Item* List::Find(Particle* _p, Item* _i)
+Item* List::Find(Particle* _p, Item* _c)
 {
-	if(_i != NULL)
-		if(_i->m_data == _p)
-			return _i;
+	if(_c != NULL)
+		if(_c->m_data == _p)
+			return _c;
 		else
-			return Find(_p, _i->m_next);
+			return Find(_p, _c->m_next);
 	else
 		return NULL;
+}
+Item* List::Find(unsigned int _gIndx, Item* _c, int _cIndx)
+{
+	if(_c == NULL)
+		return NULL;
+	else
+	{
+		if(_cIndx == _gIndx)
+			return _c;
+		else
+			return Find(_gIndx, _c->m_next, ++_cIndx);
+	}
 }
 void List::Add(Particle* _p, Item* _parent)
 {

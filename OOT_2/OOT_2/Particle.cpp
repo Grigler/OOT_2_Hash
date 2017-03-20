@@ -42,7 +42,7 @@ void Particle::HandleCollisions()
 	const int kX = m_key.x, kY = m_key.y;
 	List* bucket = m_table->m_table[kX][kY];
 	Item* i = bucket->m_root;
-
+	
 	while(i != NULL)
 	{
 		if(i->m_data != NULL && i->m_data != this)
@@ -55,10 +55,9 @@ void Particle::HandleCollisions()
 }
 void Particle::CheckCollision(Particle* _p)
 {
-	
 	glm::vec2 colDir = _p->m_pos - m_pos;
 	float c = colDir.x*colDir.x + colDir.y*colDir.y;
-
+	
 	//No square root for a massive optimisation
 
 	if(c <= (m_rad + _p->m_rad)*(m_rad + _p->m_rad)) //Tested to be faster than pow

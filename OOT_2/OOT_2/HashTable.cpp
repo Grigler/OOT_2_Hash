@@ -55,9 +55,9 @@ void HashTable::AssignHashKey(Particle* _p)
 }
 void HashTable::ClearTable()
 {
-	for (unsigned int x = 0; x < BUCKET_W; x++)
+	for (int x = 0; x < BUCKET_W; x++)
 	{
-		for (unsigned int y = 0; y < BUCKET_H; y++)
+		for (int y = 0; y < BUCKET_H; y++)
 		{
 			if(m_table[x][y])
 				m_table[x][y]->Clear(m_table[x][y]->m_root); //List Items are cleaned up in ~List()

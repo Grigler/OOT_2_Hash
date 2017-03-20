@@ -36,8 +36,8 @@ int main()
 	DataHandler dHandle;
 
 	ParticleSystem p;
-	int pCount = 500;
-	const int pDelta = 500;
+	int pCount = 2000;
+	const int pDelta = 2000;
 
 	std::cout << "\n> Starting Sim. With " << pCount << " Particles\n";
 	
@@ -85,7 +85,7 @@ int main()
 			dHandle.SampleFPS(pCount, t - startTime, 1.0f/dT);
 
 		//Recording time for data
-		if(SDL_GetTicks() - startTime >= 5*1000)
+		if(SDL_GetTicks() - startTime >= 5000)
 		{
 			startTime = SDL_GetTicks();
 
