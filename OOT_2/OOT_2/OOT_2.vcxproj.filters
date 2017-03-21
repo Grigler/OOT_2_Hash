@@ -13,22 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\SQLite3">
-      <UniqueIdentifier>{66461c1f-4faa-4d07-8d9e-226de558a3a4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SQLite3 Wrap\DB.cpp">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClCompile>
-    <ClCompile Include="SQLite3 Wrap\ErrLog.cpp">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClCompile>
-    <ClCompile Include="SQLite3 Wrap\sqlite3.c">
-      <Filter>Header Files\SQLite3</Filter>
     </ClCompile>
     <ClCompile Include="List.cpp">
       <Filter>Source Files</Filter>
@@ -47,21 +35,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SQLite3 Wrap\Data.h">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLite3 Wrap\DB.h">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLite3 Wrap\ErrLog.h">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLite3 Wrap\sqlite3.h">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClInclude>
-    <ClInclude Include="SQLite3 Wrap\SQLite3Wrap.h">
-      <Filter>Header Files\SQLite3</Filter>
-    </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>

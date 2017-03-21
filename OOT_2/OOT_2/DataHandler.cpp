@@ -1,5 +1,6 @@
 #include "DataHandler.h"
 
+//Assignment of static variables needed for the callback function
 float DataHandler::s_fpsTotal = 0.0f;
 unsigned int DataHandler::s_sampleCount = 0;
 

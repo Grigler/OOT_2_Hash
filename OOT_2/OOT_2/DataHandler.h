@@ -1,12 +1,13 @@
 #ifndef __DATA_HANDLER__
 #define __DATA_HANDLER__
 
-#include "SQLite3 Wrap\SQLite3Wrap.h"
+#include <SQLite3Wrap.h>
 
 #include <iostream>
 #include <vector>
 
 //Structures to allow easier formatting of data into 'packets'
+//with overloaded '<<' to write data 
 struct FpsDataPacket
 {
 	int   m_pCount;
@@ -51,6 +52,7 @@ public:
 	DataHandler();
 	~DataHandler();
 
+	//Buffer in memory of data to be pushed to the db in batches
 	std::vector<FpsDataPacket> m_fpsDataVec;
 
 	//Connection to In-memory database
@@ -65,15 +67,14 @@ public:
 	void SampleAverageFPS(int _pCount);
 	//Pushes local data vec to DB and clears it
 	void PushDataVec();
-	//Dumps DB to the given file
+	//Dumps DB to the given filepath (must be .db3 extension)
 	void DumpToFile(char* _to);
 
 protected:
-	//callback must be static (due to how SQLite3 works) so must be interacted with static vars
+	//callback must be static (due to how SQLite3 works), so must be interacted with static vars
 	static float s_fpsTotal;
 	static unsigned int s_sampleCount;
 	static int AverageFPSCallback(void* _na, int argc, char** argv, char** azColName);
-
 };
 
 

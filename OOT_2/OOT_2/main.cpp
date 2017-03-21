@@ -14,6 +14,7 @@
 
 int main()
 {
+	//Seeding rng
 	srand(time(NULL));
 
 	//Initialisation
@@ -22,7 +23,7 @@ int main()
 		std::cerr << "SDL Init Failure" << std::endl;
 		return -1;
 	}
-	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 2", 250, 100, S_WIDTH, S_HEIGHT, SDL_WINDOW_SHOWN);
+	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 3", 250, 100, S_WIDTH, S_HEIGHT, SDL_WINDOW_SHOWN);
 
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
