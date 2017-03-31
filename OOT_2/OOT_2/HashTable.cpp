@@ -5,6 +5,7 @@
 
 //Lowest level include for memset() - can be removed with include of most stdlib stuff
 #include <cstring>
+#include <iostream>
 
 HashTable::HashTable()
 {
@@ -75,9 +76,9 @@ void HashTable::UpdateTable()
 {
 	#pragma omp parallel
 	{
+		#pragma omp for //~2x faster to use on this loop, rather than nested (due to 16:9)
 		for (int x = 0; x < BUCKET_W; x++)
 		{
-			#pragma omp for
 			for (int y = 0; y < BUCKET_H; y++)
 			{
 				UpdateList(m_table[x][y], glm::vec2(x,y));
@@ -98,7 +99,8 @@ void HashTable::UpdateList(List* _l, glm::vec2 _key)
 			if(currKey != _key)
 			{
 				current->m_data->m_key = currKey;
-				if(currKey.x >= 0 && currKey.x < BUCKET_W && currKey.y > 0 && currKey.y < BUCKET_H)
+				if(currKey.x >= 0 && currKey.x < BUCKET_W &&
+					 currKey.y >= 0 && currKey.y < BUCKET_H)
 				{
 					int x = (int)currKey.x;
 					int y = (int)currKey.y;
@@ -107,16 +109,29 @@ void HashTable::UpdateList(List* _l, glm::vec2 _key)
 					{
 						m_table[x][y]->Add(current->m_data,m_table[x][y]->m_root);
 					}
+
+					_l->Remove(current, parent);
+					//Current changes to the parent's next as that will now
+					//point to what was the last current's next
+					current = parent->m_next;
 				}
 				else
 				{
-					//current->m_data->m_vel = -current->m_data->m_vel*0.5f;	
-				}
+					//Somehow outside the bounds of the system so reverse relevent vel comp.
+					Particle* p = current->m_data;
+					//Checking which component to reverse
+					if(p->m_pos.x < 0 || p->m_pos.x > S_WIDTH)
+						p->m_vel.x *= -1.0f;
+					if(p->m_pos.y < 0 || p->m_pos.y > S_HEIGHT)
+						p->m_vel.y *= -1.0f;
 
-				_l->Remove(current, parent);
-				//Current changes to the parent's next as that will now
-				//point to what was the last current's next
-				current = parent->m_next;
+					parent = current;
+					current = current->m_next;
+					//Not removing it from the list so that it can be placed into
+					//the appropriate one in the next pass when it may be in-bounds
+				}
+				
+				
 			}
 			else
 			{
@@ -153,6 +168,7 @@ void HashTable::CheckCollision(List* _l)
 		while(start != NULL)
 		{
 			p = start->m_data;
+			next = start->m_next;
 			while(next != NULL)
 			{
 				p->CheckCollision(next->m_data);

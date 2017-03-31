@@ -3,6 +3,7 @@
 
 #include <SQLite3Wrap.h>
 
+#include <SDL.h>
 #include <iostream>
 #include <vector>
 
@@ -45,15 +46,38 @@ struct AverageFPSDataPacket
 	}
 };
 
+//Interface for data handler to draw points internally - away from the main simulation
+class DataDrawInterface
+{
+public:
+	DataDrawInterface();
+	~DataDrawInterface();
+
+	void PlotFPSPoint(float _fps);
+
+private:
+	int m_winWidth, m_winHeight;
+	//Loops as 0 -> m_winWidth -> 0 -> ....
+	//with each plot point
+	int m_xPoint;
+	int m_lastPoint; //Last plot point drawn for line (y-value)
+
+	SDL_Window* m_window;
+	SDL_Renderer* m_renderer;
+	SDL_Texture* m_renderTexture;
+
+};
+
 //Providing an interface with the SQLite3 Wrapper
 class DataHandler
 {
 public:
-	DataHandler();
+	DataHandler(bool _isDrawing);
 	~DataHandler();
 
 	//Buffer in memory of data to be pushed to the db in batches
 	std::vector<FpsDataPacket> m_fpsDataVec;
+	DataDrawInterface* m_drawInterface; //Used for drawing average of data buffer before each push
 
 	//Connection to In-memory database
 	SQLite3::DB* m_db;
@@ -67,6 +91,8 @@ public:
 	void SampleAverageFPS(int _pCount);
 	//Pushes local data vec to DB and clears it
 	void PushDataVec();
+	//Same as before but plotting point to interface
+	void PushDataVecWithDraw();
 	//Dumps DB to the given filepath (must be .db3 extension)
 	void DumpToFile(char* _to);
 
@@ -76,6 +102,7 @@ protected:
 	static unsigned int s_sampleCount;
 	static int AverageFPSCallback(void* _na, int argc, char** argv, char** azColName);
 };
+
 
 
 

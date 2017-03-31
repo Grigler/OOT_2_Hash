@@ -12,7 +12,49 @@
 //needed for SDL
 #undef main
 
-int main()
+void PrintArgFormat();
+int RunSystem(int _startP, int _endP, int _deltaP, int _timePerSim, bool _isDrawingData);
+
+int main(int argc, char* argv[])
+{
+	if(strcmp(argv[1], "-a") == 0 && argc == 6) //strcmp returns 0 on success
+	{
+		int startP = atoi(argv[2]);
+		int endP = atoi(argv[3]);
+		int deltaP = atoi(argv[4]);
+		int timePerSim = atoi(argv[5]);
+		return RunSystem(startP, endP, deltaP, timePerSim, true);
+	}
+	else
+	{
+		if(argc == 5) //Num arguments + 1
+		{
+			int startP = atoi(argv[1]);
+			int endP = atoi(argv[2]);
+			int deltaP = atoi(argv[3]);
+			int timePerSim = atoi(argv[4]);
+			return RunSystem(startP, endP, deltaP, timePerSim, false);
+		}
+		else if(argc == 1) //1 with no arguments
+		{
+			//Run with generic values
+			std::cout << "> Runnning with default: 2,000->40,000 at 4000 deltaP for 5000ms/sim.\n\n";
+			return RunSystem(2000, 40000, 4000, 5000, true);
+		}
+		else
+		{
+			PrintArgFormat();
+			return 0;
+		}
+	}
+}
+
+void PrintArgFormat()
+{
+	std::cout << "CommandLine Format - [optional -a] [Start P] [End P] [P rate] [Time per sim. (ms)]" << std::endl;
+}
+
+int RunSystem(int _startP, int _endP, int _deltaP, int _timePerSim, bool _isDrawingData)
 {
 	//Seeding rng
 	srand(time(NULL));
@@ -24,25 +66,26 @@ int main()
 		return -1;
 	}
 	SDL_Window* window = SDL_CreateWindow("Graham Rigler - OOT 3", 250, 100, S_WIDTH, S_HEIGHT, SDL_WINDOW_SHOWN);
-
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 	SDL_RenderClear(renderer);
+
+	
 
 	bool isRunning = true;
 	float dT = 0.0f, prevTStamp = SDL_GetTicks();
 	float startTime = prevTStamp, lastDataPush = prevTStamp;
 	long unsigned int fc = 0;
 
-	DataHandler dHandle;
+	DataHandler dHandle(_isDrawingData);
 
-	ParticleSystem p;
-	int pCount = 2000;
-	const int pDelta = 2000;
+	ParticleSystem pSys;
+	int pCount = _startP;
+	const int pDelta = _deltaP;
 
 	std::cout << "\n> Starting Sim. With " << pCount << " Particles\n";
 	
-	p.InitWith(pCount);
+	pSys.InitWith(pCount);
 
 	SDL_Event e;
 
@@ -70,10 +113,10 @@ int main()
 		prevTStamp = SDL_GetTicks();
 
 		//Program happens here
-		p.Update(dT);
+		pSys.Update(dT);
 
 		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); 
-		p.Draw(renderer);
+		pSys.Draw(renderer);
 
 		float t = prevTStamp;
 		if(t - lastDataPush >= DATA_PUSH_TIME)
@@ -86,22 +129,26 @@ int main()
 			dHandle.SampleFPS(pCount, t - startTime, 1.0f/dT);
 
 		//Recording time for data
-		if(SDL_GetTicks() - startTime >= 5000)
+		if(SDL_GetTicks() - startTime >= _timePerSim)
 		{
 			startTime = SDL_GetTicks();
 
 			//Pushing all left-over data before going into next amount
-			dHandle.PushDataVec();
+			if(_isDrawingData)
+				dHandle.PushDataVecWithDraw();
+			else
+				dHandle.PushDataVec();
+
+			//Calculating and storing average fps for that simulation
+			dHandle.SampleAverageFPS(pCount);
 
 			pCount += pDelta;
-			if(pCount >= 50000)
+			if(pCount > _endP)
 				isRunning = false;
 			else
 			{
-				//Calculating and storing average fps for that simulation
-				dHandle.SampleAverageFPS(pCount - pDelta);
-
-				p.InitWith(pCount);
+				std::cout << "\t> Clearing...\n";
+				pSys.InitWith(pCount);
 				std::cout << "\n> Starting Sim. With " << pCount << " Particles\n";
 
 				//Reseting timers to account for data processing time
@@ -114,10 +161,17 @@ int main()
 		fc++;
 	}
 	//Dumping data from memory to file
-	std::cout << "> Dumping Data to 'ProfileData.db3'\n";
+	std::cout << "\n> Dumping Data to 'ProfileData.db3'\n";
 	dHandle.DumpToFile("ProfileData.db3");
+	std::cout << "\t> Done\n\n";
+
+	std::cout << "> Any key to exit...\n";
+	getchar();
+	std::cout << "> Cleaning up\n";
 
 	//Cleanup
+	pSys.Clear(); //Deletes all particle data
+	delete pSys.m_table; //Deleting hash-table
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

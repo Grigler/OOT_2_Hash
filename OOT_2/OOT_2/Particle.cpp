@@ -64,6 +64,9 @@ void Particle::CheckCollision(Particle* _p)
 		float a = glm::dot(m_pos, colDir);
 		float b = glm::dot(_p->m_pos, colDir);
 
-		m_vel += (b-a)*colDir;
+		glm::vec2 dVel = (b-a)*colDir;
+
+		m_vel += dVel;
+		_p->m_vel += -dVel; //Handling other particles change in velocity
 	}
 }

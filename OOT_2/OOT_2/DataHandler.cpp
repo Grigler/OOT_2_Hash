@@ -4,12 +4,13 @@
 float DataHandler::s_fpsTotal = 0.0f;
 unsigned int DataHandler::s_sampleCount = 0;
 
-DataHandler::DataHandler()
+DataHandler::DataHandler(bool _isDrawing)
 {
 	//Opening a new data base connection, stored in virtual memory for speed
 	m_db = new SQLite3::DB(":memory:");
 	m_db->ToggleSuccesPrint();
-	
+	m_db->m_tables.reserve(2);
+
 	char* fields[] = {"P_COUNT INT NOT NULL", "TIME_STAMP FLOAT NOT NULL", "FPS FLOAT NOT NULL"};//Making creating a table easier
 	char* avgFields[] = {fields[0], fields[2]};
 
@@ -18,10 +19,20 @@ DataHandler::DataHandler()
 
 	m_db->CreateTable("AVG_FPS_DATA", avgFields, 2);
 	m_avgFpsTable = m_db->m_tables[1]; //Assigning reference to new table
+
+	if(_isDrawing)
+	{
+		m_drawInterface = new DataDrawInterface();
+	}
+	else
+	{
+		m_drawInterface = NULL;
+	}
 }
 DataHandler::~DataHandler()
 {
 	delete m_db;
+	delete m_drawInterface;
 }
 
 void DataHandler::SampleFPS(int _pCount, float _tStamp, float _fps)
@@ -50,6 +61,22 @@ void DataHandler::SampleAverageFPS(int _pCount)
 void DataHandler::PushDataVec()
 {
 	SQLite3::Input::InsertVecToTable(m_db, m_fpsTable, m_fpsDataVec);
+	m_fpsDataVec.clear();
+}
+void DataHandler::PushDataVecWithDraw()
+{
+	SQLite3::Input::InsertVecToTable(m_db, m_fpsTable, m_fpsDataVec);
+
+	if(m_drawInterface != NULL) //Only not null if it drawing is enabled
+	{
+		float bufferAverage = 0.0f;
+		for (size_t i = 0; i < m_fpsDataVec.size(); i++)
+		{
+			bufferAverage += m_fpsDataVec.at(i).m_fps;
+		}
+		bufferAverage /= m_fpsDataVec.size();
+		m_drawInterface->PlotFPSPoint(bufferAverage);
+	}
 	m_fpsDataVec.clear();
 }
 void DataHandler::DumpToFile(char* _to)

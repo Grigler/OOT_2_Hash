@@ -13,7 +13,7 @@ public:
 	ParticleSystem();
 
 	//Intialises with a specific number of particles
-	void InitWith(unsigned int _n);
+	void InitWith(size_t _n);
 
 	void Clear();
 

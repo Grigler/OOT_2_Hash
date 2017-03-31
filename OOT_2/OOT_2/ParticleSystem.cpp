@@ -11,12 +11,12 @@ ParticleSystem::ParticleSystem()
 	m_table = new HashTable();
 }
 
-void ParticleSystem::InitWith(unsigned int _n)
+void ParticleSystem::InitWith(size_t _n)
 {
 	Clear();
 	m_particles.resize(_n);
 
-	for (unsigned int i = 0; i < _n; i++)
+	for (size_t i = 0; i < _n; i++)
 	{
 		m_particles.at(i) = CreateParticle();
 		m_table->AssignHashKey(m_particles.at(i));
@@ -28,7 +28,7 @@ void ParticleSystem::Clear()
 	//Clearing references to all particles
 	m_table->ClearTable();
 	
-	for (int i = 0; i < m_particles.size(); i++)
+	for (size_t i = 0; i < m_particles.size(); i++)
 	{
 		//Deleting memory at all non-null particles
 		delete m_particles.at(i);
@@ -41,15 +41,15 @@ Particle* ParticleSystem::CreateParticle()
 {
 	//initialise physicial properties
 	glm::vec2 p = glm::vec2(rand()%S_WIDTH, rand()%S_HEIGHT);
-	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 15.0f;
-	float r = 1.5f;
+	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 30.0f;
+	float r = 1.0f;
 
 	return new Particle(p, v, r, m_table);
 }
 
 void ParticleSystem::Draw(SDL_Renderer* _r)
 {
-	for (unsigned int i = 0; i < m_particles.size(); i++)
+	for (size_t i = 0; i < m_particles.size(); i++)
 	{
 		m_particles.at(i)->Draw(_r);
 	}
@@ -76,20 +76,22 @@ void ParticleSystem::Update(float _deltaT)
 
 void ParticleSystem::Update(float _deltaT)
 {
+	
+	//Re-hashes particles and moves between buckets as need be (parallelised)
+	m_table->UpdateTable();
+	//Checks particle collisions on a per-bucket basis (parallelised)
+	m_table->CheckCollisions();
+
 	#pragma omp parallel
 	{
-		//Updating positions first for forwared-euler method
+		//Updating positions with second langrangian method
 		#pragma omp for
-		for (int i = 0; i < m_particles.size(); i++)
+		for (int i = 0; i < m_particles.size(); i++) //int must be used as iterator with omp for
 		{
 			//Update position
 			m_particles[i]->m_pos += m_particles[i]->m_vel * _deltaT;
 			//arbritary dampening of velocity
-			m_particles[i]->m_vel += -m_particles[i]->m_vel * _deltaT * _deltaT;
+			//m_particles[i]->m_vel += -m_particles[i]->m_vel/15.0f * _deltaT;
 		}
 	}
-	//Re-hashes particles and moves between buckets as need be
-	m_table->UpdateTable();
-	//Checks particle collisions on a per-bucket basis
-	m_table->CheckCollisions();
 }
