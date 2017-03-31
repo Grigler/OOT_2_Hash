@@ -42,7 +42,7 @@ Particle* ParticleSystem::CreateParticle()
 	//initialise physicial properties
 	glm::vec2 p = glm::vec2(rand()%S_WIDTH, rand()%S_HEIGHT);
 	glm::vec2 v = glm::normalize(glm::vec2(rand()%2000 - 1000, rand()%2000 - 1000)) * 15.0f;
-	float r = 1.0f;
+	float r = 1.5f;
 
 	return new Particle(p, v, r, m_table);
 }
@@ -54,11 +54,12 @@ void ParticleSystem::Draw(SDL_Renderer* _r)
 		m_particles.at(i)->Draw(_r);
 	}
 }
+/*
 void ParticleSystem::Update(float _deltaT)
 {
 	if(m_table)
 		m_table->ClearTable();
-
+	
 	//Assigning hashes to all particles
 	for (int i = 0; i < m_particles.size(); i++)
 	{
@@ -70,4 +71,25 @@ void ParticleSystem::Update(float _deltaT)
 	{
 		m_particles.at(i)->Update(_deltaT);
 	}
+}
+*/
+
+void ParticleSystem::Update(float _deltaT)
+{
+	#pragma omp parallel
+	{
+		//Updating positions first for forwared-euler method
+		#pragma omp for
+		for (int i = 0; i < m_particles.size(); i++)
+		{
+			//Update position
+			m_particles[i]->m_pos += m_particles[i]->m_vel * _deltaT;
+			//arbritary dampening of velocity
+			m_particles[i]->m_vel += -m_particles[i]->m_vel * _deltaT * _deltaT;
+		}
+	}
+	//Re-hashes particles and moves between buckets as need be
+	m_table->UpdateTable();
+	//Checks particle collisions on a per-bucket basis
+	m_table->CheckCollisions();
 }

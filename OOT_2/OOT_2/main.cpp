@@ -94,7 +94,7 @@ int main()
 			dHandle.PushDataVec();
 
 			pCount += pDelta;
-			if(pCount >= 30000)
+			if(pCount >= 50000)
 				isRunning = false;
 			else
 			{

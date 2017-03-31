@@ -55,10 +55,9 @@ void Particle::HandleCollisions()
 }
 void Particle::CheckCollision(Particle* _p)
 {
-	glm::vec2 colDir = _p->m_pos - m_pos;
-	float c = colDir.x*colDir.x + colDir.y*colDir.y;
-	
 	//No square root for a massive optimisation
+	glm::vec2 colDir = _p->m_pos - m_pos;
+	float c = colDir.x*colDir.x + colDir.y*colDir.y;	
 
 	if(c <= (m_rad + _p->m_rad)*(m_rad + _p->m_rad)) //Tested to be faster than pow
 	{

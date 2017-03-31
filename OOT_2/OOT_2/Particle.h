@@ -26,7 +26,6 @@ public:
 
 	void HandleCollisions();
 
-private:
 	//Does simple sphere intersection test and changes velocity
 	void CheckCollision(Particle* _p);
 
